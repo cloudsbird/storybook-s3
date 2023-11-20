@@ -18,4 +18,4 @@ jobs:
       - name: Delete Storybook from S3
         run: |
           # Change the bucket name to your bucket name
-          aws s3 rm s3://${{secrets.AWS_BUCKET}}/pr-${{ github.event.pull_request.number }} --recursive
+          aws s3 rm s3://bucket-name/pr-${{ github.event.pull_request.number }} --recursive

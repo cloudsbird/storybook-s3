@@ -49,3 +49,7 @@ Here's an example of how to use this action:
     preview: 'true' # optional
 
 ```
+
+## Examples
+
+For more detailed examples of how to use this action, please see the [examples](./examples) folder in this repository.
