@@ -76,15 +76,10 @@ runs:
           const issue_number = context.issue.number;
           const repository = context.repo.repo;
           const owner = context.repo.owner;
-          const message = `Story Book Deployment has been done! URL: http://${AWS_S3_BUCKET}.${AWS_S3_HOST}/${DEST_DIR}/index.html`;
+          const message = `Story Book Deployment has been done! URL: http://${{ inputs.aws_s3_bucket }}.${{ inputs.aws_s3_host }}/${{ steps.preview.outputs.value }}/index.html`;
           github.rest.issues.createComment({
             issue_number: issue_number,
             owner: owner,
             repo: repository,
             body: message
           });
-      env:
-        AWS_S3_BUCKET: ${{ inputs.aws_s3_bucket }}
-        AWS_S3_HOST: ${{ inputs.aws_s3_host }}
-        DEST_DIR: ${{ steps.preview.outputs.value }}
-
