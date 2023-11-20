@@ -1,0 +1,31 @@
+name: StoryBook Deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  storybook-deploy:
+    runs-on: self-hosted
+    steps:
+      # Manual Checkout
+      - uses: actions/checkout@v3
+
+      # Set up Node
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install yarn
+        run: npm install -g yarn
+
+      - name: 'Deploy to S3'
+        uses: cloudsbird/storybook-s3@v0.0.9
+        with:
+          aws_s3_bucket: 'storybook'
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
+          aws_s3_endpoint: 'storybook.s3.us-east-1.amazonaws.com'
+          install_command: 'yarn install'
+          build_command: 'yarn build-storybook'

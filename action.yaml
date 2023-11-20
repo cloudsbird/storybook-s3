@@ -33,10 +33,6 @@ inputs:
     description: 'Comand to build storybook'
     required: false
     default: 'npm run build-storybook'
-# outputs:
-#   page_url:
-#     description: "The URL of the page"
-#     value: ${{ steps.deploy.outputs.page_url }}
 
 runs:
   using: 'composite'

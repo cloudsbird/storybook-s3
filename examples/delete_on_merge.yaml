@@ -1,0 +1,21 @@
+name: StoryBook Deployment
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  delete_storybook:
+    runs-on: self-hosted
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:  ${{ secrets.AWS_REGION }}
+
+      - name: Delete Storybook from S3
+        run: |
+          # Change the bucket name to your bucket name
+          aws s3 rm s3://${{secrets.AWS_BUCKET}}/pr-${{ github.event.pull_request.number }} --recursive
