@@ -18,6 +18,9 @@ inputs:
     description: 'AWS S3 Host'
     required: false
     default: 's3.amazonaws.com'
+  aws_s3_endpoint:
+    description: 'AWS S3 Endpoint URL'
+    required: true
   preview: 
     description: 'Preview'
     required: false
@@ -76,7 +79,7 @@ runs:
           const issue_number = context.issue.number;
           const repository = context.repo.repo;
           const owner = context.repo.owner;
-          const message = `Story Book Deployment has been done! URL: http://${{ inputs.aws_s3_bucket }}.${{ inputs.aws_s3_host }}/${{ steps.preview.outputs.value }}/index.html`;
+          const message = `Story Book Deployment has been done! URL: https://${{inputs.aws_s3_endpoint}}/${{ steps.preview.outputs.value }}/index.html`;
           github.rest.issues.createComment({
             issue_number: issue_number,
             owner: owner,
