@@ -68,17 +68,9 @@ runs:
         AWS_S3_HOST: ${{ inputs.aws_s3_host }}
         DEST_DIR: ${{ steps.preview.outputs.result }}
 
-    - name: 'Print URL'
-      run: |
-        echo "URL: http://$AWS_S3_BUCKET.$AWS_S3_HOST/$DEST_DIR/index.html"
-      env:
-        AWS_S3_BUCKET: ${{ inputs.aws_s3_bucket }}
-        AWS_S3_HOST: ${{ inputs.aws_s3_host }}
-        DEST_DIR: ${{ steps.preview.outputs.result }}
-
     - name: 'Comment on PR'
       uses: actions/github-script@v5
-      if: input.preview == 'true'
+      if: github.event_name == 'pull_request' && inputs.preview == 'true'
       with:
         script: |
           const issue_number = context.issue.number;
