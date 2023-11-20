@@ -17,7 +17,7 @@ Here's an example of how to use this action:
 
 ```yaml
 - name: 'Deploy to S3'
-  uses: [Your GitHub username]/[Your repository name]@v1
+  uses: cloudsbird/storybook-s3@v0.0.1
   with:
     aws_s3_bucket: ${{ secrets.AWS_S3_BUCKET }}
     aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
