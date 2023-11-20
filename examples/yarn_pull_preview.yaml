@@ -21,7 +21,7 @@ jobs:
         run: npm install -g yarn
 
       - name: 'Deploy to S3'
-        uses: cloudsbird/storybook-s3@v0.0.9
+        uses: cloudsbird/storybook-s3@v1.0.0
         with:
           aws_s3_bucket: 'storybook'
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
