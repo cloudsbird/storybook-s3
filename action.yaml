@@ -51,7 +51,7 @@ runs:
     - uses: haya14busa/action-cond@v1
       id: preview
       with: 
-        condition: ${{ inputs.preview == 'true' }}
+        cond: ${{ inputs.preview == 'true' }}
         if_true: "pr-${{ github.event.pull_request.number }}"
         if_false: "main"
 
