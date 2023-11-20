@@ -1,0 +1,91 @@
+name: 'Deploy Storybook to AWS S3'
+description: 'Build and deploy storybook code to AWS S3'
+
+inputs:
+  aws_access_key_id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws_secret_access_key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws_region:
+    description: 'AWS Region'
+    required: true
+  aws_s3_bucket:
+    description: 'AWS S3 Bucket'
+    required: true
+  aws_s3_host:
+    description: 'AWS S3 Host'
+    required: false
+    default: 's3.amazonaws.com'
+  preview: 
+    description: 'Preview'
+    required: false
+    default: 'false'
+  install_command:
+    description: 'Command to install dependencies'
+    required: false
+    default: 'npm install'
+  build_command:
+    description: 'Comand to build storybook'
+    required: false
+    default: 'npm run build-storybook'
+# outputs:
+#   page_url:
+#     description: "The URL of the page"
+#     value: ${{ steps.deploy.outputs.page_url }}
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: 'Build'
+      shell: bash
+      run: |
+        ${{ inputs.install_command }}
+        ${{ inputs.build_command }}
+
+    - name: 'Deploy to S3'
+      uses: jakejarvis/s3-sync-action@master
+      with: 
+        args: --acl public-read --follow-symlinks --delete
+      env:
+        AWS_S3_BUCKET: ${{ inputs.aws_s3_bucket }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+        AWS_REGION: ${{ inputs.aws_region }}
+        SOURCE_DIR: 'storybook-static'
+        AWS_S3_HOST: ${{ inputs.aws_s3_host }}
+        DEST_DIR: ${{ if eq(inputs.preview, 'true') }}pr-${{ github.event.pull_request.number }}${{ else }}main${{ endif }}
+
+    - name: 'Print URL'
+      run: |
+        echo "URL: http://$AWS_S3_BUCKET.$AWS_S3_HOST/$DEST_DIR/index.html"
+      env:
+        AWS_S3_BUCKET: ${{ inputs.aws_s3_bucket }}
+        AWS_S3_HOST: ${{ inputs.aws_s3_host }}
+        DEST_DIR: ${{ if eq(inputs.preview, 'true') }}pr-${{ github.event.pull_request.number }}${{ else }}main${{ endif }}
+
+    - name: 'Comment on PR'
+      uses: actions/github-script@v5
+      if: input.preview == 'true'
+      with:
+        script: |
+          const issue_number = context.issue.number;
+          const repository = context.repo.repo;
+          const owner = context.repo.owner;
+          const message = `Deployment has been done! URL: http://$AWS_S3_BUCKET.$AWS_S3_HOST/$DEST_DIR/index.html`;
+          github.rest.issues.createComment({
+            issue_number: issue_number,
+            owner: owner,
+            repo: repository,
+            body: message
+          });
+      env:
+        AWS_S3_BUCKET: ${{ inputs.aws_s3_bucket }}
+        AWS_S3_HOST: ${{ inputs.aws_s3_host }}
+        DEST_DIR: ${{ if eq(inputs.preview, 'true') }}pr-${{ github.event.pull_request.number }}${{ else }}main${{ endif }}
+
