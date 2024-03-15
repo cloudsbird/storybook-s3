@@ -33,12 +33,17 @@ inputs:
     description: 'Comand to build storybook'
     required: false
     default: 'npm run build-storybook'
+  checkout:
+    description: 'Command to checkout'
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
 
   steps:
     - name: Checkout
+      if: inputs.checkout == 'true'
       uses: actions/checkout@v4
 
     - name: 'Build'
