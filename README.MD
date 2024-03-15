@@ -47,6 +47,7 @@ Here's an example of how to use this action:
     aws_s3_host: ${{ secrets.AWS_S3_HOST }} # e.g. fra1.digitaloceanspaces.com
     aws_s3_endpoint: ${{ secrets.AWS_S3_ENDPOINT }} # e.g. https://fra1.digitaloceanspaces.com
     preview: 'true' # optional
+    checkout: 'true' # optional
 
 ```
 
