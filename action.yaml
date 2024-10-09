@@ -69,7 +69,7 @@ runs:
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
         AWS_REGION: ${{ inputs.aws_region }}
         SOURCE_DIR: 'storybook-static'
-        AWS_S3_HOST: ${{ inputs.aws_s3_host }}
+        AWS_S3_ENDPOINT: ${{ inputs.aws_s3_host }}
         DEST_DIR: ${{ steps.preview.outputs.value }}
 
     - name: 'Comment on PR'
